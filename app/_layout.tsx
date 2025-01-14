@@ -1,39 +1,63 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import { View, StatusBar } from 'react-native';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+function RootLayoutNav() {
+  const { isAuthenticated } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const inAuthGroup = segments[0] === '(tabs)';
 
-  if (!loaded) {
-    return null;
-  }
+    if (!isAuthenticated) {
+      // Dacă nu este autentificat, redirecționează către login
+      router.replace('/login');
+    } else if (isAuthenticated && !inAuthGroup) {
+      // Dacă este autentificat și nu este în grupul de tab-uri, redirecționează către index
+      router.replace('/(tabs)');
+    }
+  }, [isAuthenticated]);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack 
+      screenOptions={{ 
+        headerShown: false,
+        contentStyle: { 
+          backgroundColor: 'transparent',
+        },
+        animation: 'fade',
+      }}
+    >
+      <Stack.Screen 
+        name="login"
+        options={{
+          headerShown: false,
+          gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen 
+        name="(tabs)" 
+        options={{ 
+          headerShown: false,
+        }} 
+      />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <View style={{ flex: 1 }}>
+      <StatusBar 
+        translucent 
+        backgroundColor="transparent" 
+        barStyle="dark-content"
+      />
+      <AuthProvider>
+        <RootLayoutNav />
+      </AuthProvider>
+    </View>
   );
 }

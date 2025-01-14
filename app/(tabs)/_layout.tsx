@@ -1,45 +1,49 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Tabs, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const router = useRouter();
+
+  const gesture = Gesture.Pan()
+    .onEnd((event) => {
+      if (event.velocityX < -50) { // Swipe left to go to calendar
+        router.replace('/calendar');
+      }
+    });
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureDetector gesture={gesture}>
+        <Animated.View style={{ flex: 1 }}>
+          <StatusBar style="dark" />
+          <Tabs
+            screenOptions={{
+              tabBarStyle: { display: 'none' },
+              headerShown: false,
+              ...(Platform.OS === 'android' && {
+                android_statusBarTranslucent: true
+              })
+            }}
+          >
+            <Tabs.Screen 
+              name="index" 
+              options={{
+                href: null
+              }}
+            />
+            <Tabs.Screen 
+              name="calendar"
+              options={{
+                href: null
+              }}
+            />
+          </Tabs>
+        </Animated.View>
+      </GestureDetector>
+    </GestureHandlerRootView>
   );
 }

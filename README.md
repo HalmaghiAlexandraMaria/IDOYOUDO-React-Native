@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
@@ -48,3 +49,7 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+=======
+# IDOYOUDO-React-Native
+This mobile app is developed using Expo and React Native, with the aim of providing an efficient solution for wedding planning. The app allows users to create, organize and track essential wedding activities.
+>>>>>>> db0b9c9ea29d861c0508fca544d41e41da99bcfc

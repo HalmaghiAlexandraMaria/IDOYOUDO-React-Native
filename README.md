@@ -51,5 +51,16 @@ Join our community of developers creating universal apps.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 =======
 # IDOYOUDO-React-Native
+Wedding Planner App
+
 This mobile app is developed using Expo and React Native, with the aim of providing an efficient solution for wedding planning. The app allows users to create, organize and track essential wedding activities.
 
+Features:
+-Create and manage wedding events
+-Organize and track essential activities
+-Ability to add and edit event details
+
+Technologies used:
+Expo
+React Native
+TypeScript
